@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import { createCheckoutSession } from '@/actions/stripe-actions';
@@ -8,11 +6,10 @@ import { useCartStore, type CartItem as CartItemType } from '@/stores/cart-store
 import { Loader2, ShoppingCart, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useShallow } from 'zustand/shallow';
 
 const freeShippingAmount = 15; // $15 for free shipping
-
 
 const CartItem = ({item}: {item: CartItemType}) => {
     const { removeItem, updateQuantity } = useCartStore(
@@ -79,7 +76,7 @@ const CartItem = ({item}: {item: CartItemType}) => {
 }
 
 const Cart = () => {
-    const { cartId, removeItem, updateQuantity, items, close, isOpen, syncWithUser, setLoaded, getTotalPrice, getTotalItems } = useCartStore(
+    const { cartId, items, close, isOpen, syncWithUser, setLoaded, getTotalPrice, getTotalItems } = useCartStore(
         useShallow((state) => ({
             cartId: state.cartId,
             removeItem: state.removeItem,
@@ -94,7 +91,15 @@ const Cart = () => {
         }))
     );
 
-   
+    useEffect(() => {
+        const initCart = async () => {
+            await useCartStore.persist.rehydrate();
+            await syncWithUser();
+            setLoaded(true);
+        };
+
+        initCart();
+    }, []);
 
     const [loadingProceed, setLoadingProceed] = useState<boolean>(false);
     const handleProceedToCheckout = async () => {
@@ -106,6 +111,7 @@ const Cart = () => {
         const checkoutUrl = await createCheckoutSession(cartId);
 
         try {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const anyWindow = window as any;
 
             if(anyWindow.umami) {
@@ -115,6 +121,7 @@ const Cart = () => {
                     currency: 'USD',
                 })
             }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch(e) {}
 
         window.location.href = checkoutUrl;
@@ -283,9 +290,3 @@ const Cart = () => {
 };
 
 export default Cart;
-function setLoaded(arg0: boolean) {
-    throw new Error('Function not implemented.');
-}
-function syncWithUser() {
-    throw new Error('Function not implemented.');
-}

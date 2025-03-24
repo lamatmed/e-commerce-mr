@@ -2,7 +2,7 @@
 
 import { addWinningItemToCart } from '@/actions/cart-actions';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { Product } from '../../../sanity.types';
+import { Product } from '@/sanity.types';
 import { urlFor } from '@/sanity/lib/image';
 import { useCartStore } from '@/stores/cart-store';
 import { Loader2, ShoppingCart } from 'lucide-react';

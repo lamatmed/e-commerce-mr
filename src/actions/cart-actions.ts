@@ -2,7 +2,7 @@
 
 import { getCurrentSession } from "@/actions/auth";
 import prisma from "@/lib/prisma";
-import { Product } from "../../sanity.types";
+import { Product } from "@/sanity.types";
 import { urlFor } from "@/sanity/lib/image";
 import { revalidatePath } from "next/cache";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

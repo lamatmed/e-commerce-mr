@@ -1,6 +1,6 @@
 "use server";
 
-import { Product } from "../../sanity.types";
+import { Product } from "@/sanity.types";
 import { createClient } from "next-sanity";
 
 export const getWheelOfFortuneConfiguration = async () => {
